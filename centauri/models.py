@@ -23,8 +23,8 @@ class AstronomyShow(models.Model):
 
 class PlanetariumDome(models.Model):
     name = models.CharField(max_length=255)
-    rows = models.ImageField()
-    seats_in_row = models.ImageField()
+    rows = models.IntegerField()
+    seats_in_row = models.IntegerField()
 
     def __str__(self):
         return f"Hall: {self.name}"
