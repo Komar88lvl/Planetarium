@@ -59,10 +59,22 @@ class Reservation(models.Model):
         return f"Client name: {self.user}, created: {self.created_at}"
 
 
-# class Ticket(models.Model):
-#     row = models.IntegerField()
-#     seat = models.IntegerField()
-#     show_session = models.ForeignKey(
-#         "ShowSession",
-#
-#     )
+class Ticket(models.Model):
+    row = models.IntegerField()
+    seat = models.IntegerField()
+    show_session = models.ForeignKey(
+        ShowSession,
+        on_delete=models.CASCADE,
+        related_name="tickets",
+    )
+    reservation = models.ForeignKey(
+        Reservation,
+        on_delete=models.CASCADE,
+        related_name="tickets",
+    )
+
+    def __str__(self):
+        return (
+            f"row: {self.row}, seat: {self.seat}, "
+            f"reservation: {self.reservation}"
+        )
