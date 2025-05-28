@@ -1,3 +1,5 @@
 from django.contrib import admin
+from centauri.models import ShowTheme
 
-# Register your models here.
+
+admin.site.register(ShowTheme)
