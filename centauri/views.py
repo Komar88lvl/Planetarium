@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from centauri.models import ShowTheme
+from centauri.serializers import ShowThemeSerializer
+
+
+class ShowThemeViewSet(viewsets.ModelViewSet):
+    queryset = ShowTheme.objects.all()
+    serializer_class = ShowThemeSerializer
