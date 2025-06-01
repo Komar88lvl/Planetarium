@@ -4,11 +4,13 @@ from centauri.models import (
     ShowTheme,
     PlanetariumDome,
     AstronomyShow,
+    ShowSession,
 )
 from centauri.serializers import (
     ShowThemeSerializer,
     PlanetariumDomeSerializer,
     AstronomyShowSerializer,
+    ShowSessionSerializer,
 )
 
 
@@ -25,3 +27,8 @@ class PlanetariumDomeViewSet(viewsets.ModelViewSet):
 class AstronomyShowViewSet(viewsets.ModelViewSet):
     queryset = AstronomyShow.objects.all()
     serializer_class = AstronomyShowSerializer
+
+
+class ShowSessionViewSet(viewsets.ModelViewSet):
+    queryset = ShowSession.objects.all()
+    serializer_class = ShowSessionSerializer
