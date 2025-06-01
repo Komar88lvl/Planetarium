@@ -3,6 +3,7 @@ from centauri.models import (
     ShowTheme,
     PlanetariumDome,
     AstronomyShow,
+    ShowSession,
 )
 
 
@@ -25,3 +26,10 @@ class AstronomyShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = AstronomyShow
         fields = ("id", "title", "description", "show_themes")
+
+
+class ShowSessionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ShowSession
+        fields = ("id", "astronomy_show", "planetarium_dome", "show_time")
