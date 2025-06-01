@@ -6,7 +6,7 @@ class ShowTheme(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"Show theme: {self.name}"
+        return self.name
 
 
 class AstronomyShow(models.Model):
@@ -18,7 +18,7 @@ class AstronomyShow(models.Model):
     )
 
     def __str__(self):
-        return f"Astronomy show: {self.title}"
+        return self.title
 
 
 class PlanetariumDome(models.Model):
@@ -27,7 +27,7 @@ class PlanetariumDome(models.Model):
     seats_in_row = models.IntegerField()
 
     def __str__(self):
-        return f"Hall: {self.name}"
+        return self.name
 
 
 class ShowSession(models.Model):
@@ -44,7 +44,11 @@ class ShowSession(models.Model):
     show_time = models.DateTimeField()
 
     def __str__(self):
-        return f"show: {self.astronomy_show}, time: {self.show_time}"
+        return (
+            f"show: {self.astronomy_show}, "
+            f"hall: {self.planetarium_dome}, "
+            f"time: {self.show_time}"
+        )
 
 
 class Reservation(models.Model):
