@@ -32,6 +32,10 @@ class AstronomyShowListSerializer(AstronomyShowSerializer):
     show_themes = ShowThemeSerializer(many=True)
 
 
+class AstronomyShowRetrieveSerializer(AstronomyShowSerializer):
+    show_themes = ShowThemeSerializer(many=True)
+
+
 class ShowSessionSerializer(serializers.ModelSerializer):
 
     class Meta:
