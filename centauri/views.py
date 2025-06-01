@@ -11,6 +11,7 @@ from centauri.serializers import (
     PlanetariumDomeSerializer,
     AstronomyShowSerializer,
     ShowSessionSerializer,
+    AstronomyShowListSerializer,
 )
 
 
@@ -26,7 +27,12 @@ class PlanetariumDomeViewSet(viewsets.ModelViewSet):
 
 class AstronomyShowViewSet(viewsets.ModelViewSet):
     queryset = AstronomyShow.objects.all()
-    serializer_class = AstronomyShowSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return AstronomyShowListSerializer
+
+        return AstronomyShowSerializer
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
