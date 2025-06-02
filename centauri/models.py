@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import UniqueConstraint
 
 
 class ShowTheme(models.Model):
@@ -80,6 +81,14 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="tickets",
     )
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=["seat", "row", "show_session"],
+                name="unique_ticket_seat_row_show_session"
+            )
+        ]
 
     def __str__(self):
         return (
