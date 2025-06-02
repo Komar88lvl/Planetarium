@@ -4,6 +4,8 @@ from centauri.models import (
     PlanetariumDome,
     AstronomyShow,
     ShowSession,
+    Ticket,
+    Reservation,
 )
 
 
@@ -74,3 +76,17 @@ class ShowSessionRetrieveSerializer(ShowSessionSerializer):
         many=False,
         read_only=True
     )
+
+
+class TicketSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ticket
+        fields = ("id", "row", "seat", "show_session")
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reservation
+        fields = ("id", "created_at", "user", "tickets")
