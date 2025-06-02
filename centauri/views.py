@@ -5,6 +5,7 @@ from centauri.models import (
     PlanetariumDome,
     AstronomyShow,
     ShowSession,
+    Reservation,
 )
 from centauri.serializers import (
     ShowThemeSerializer,
@@ -16,6 +17,7 @@ from centauri.serializers import (
     AstronomyShowRetrieveSerializer,
     PlanetariumDomeListSerializer,
     ShowSessionRetrieveSerializer,
+    ReservationSerializer,
 )
 
 
@@ -56,3 +58,8 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             return ShowSessionRetrieveSerializer
 
         return ShowSessionSerializer
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
