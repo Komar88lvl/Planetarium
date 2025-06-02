@@ -15,6 +15,7 @@ from centauri.serializers import (
     ShowSessionListSerializer,
     AstronomyShowRetrieveSerializer,
     PlanetariumDomeListSerializer,
+    ShowSessionRetrieveSerializer,
 )
 
 
@@ -51,5 +52,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return ShowSessionListSerializer
+        elif self.action == "retrieve":
+            return ShowSessionRetrieveSerializer
 
         return ShowSessionSerializer
