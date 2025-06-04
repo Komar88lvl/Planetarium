@@ -91,7 +91,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         if planetarium_dome:
             queryset = queryset.filter(
                 planetarium_dome__name__icontains=planetarium_dome
-
+            )
 
         if self.action == "list":
             return queryset.select_related()
