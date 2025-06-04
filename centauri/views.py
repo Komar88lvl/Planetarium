@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import viewsets
 
 from centauri.models import (
@@ -52,7 +54,9 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
         show_themes = self.request.query_params.get("show_themes")
 
         if show_themes:
-            queryset = queryset.filter(show_themes__name__icontains=show_themes)
+            queryset = queryset.filter(
+                show_themes__name__icontains=show_themes
+            )
 
         return queryset.distinct()
 
@@ -69,7 +73,14 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         return ShowSessionSerializer
 
     def get_queryset(self):
+        show_date = self.request.query_params.get("show_date")
+
         queryset = self.queryset
+
+        if show_date:
+            show_date = datetime.strptime(show_date, "%Y-%m-%d").date()
+            queryset = queryset.filter(show_time__date=show_date)
+
         if self.action == "list":
             return queryset.select_related()
 
