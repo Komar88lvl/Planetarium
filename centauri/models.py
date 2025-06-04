@@ -5,14 +5,14 @@ from django.db.models import UniqueConstraint
 
 
 class ShowTheme(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class AstronomyShow(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
     show_themes = models.ManyToManyField(
         ShowTheme,
@@ -24,7 +24,7 @@ class AstronomyShow(models.Model):
 
 
 class PlanetariumDome(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
 
