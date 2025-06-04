@@ -47,6 +47,15 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 
         return AstronomyShowSerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        show_themes = self.request.query_params.get("show_themes")
+
+        if show_themes:
+            queryset = queryset.filter(show_themes__name__icontains=show_themes)
+
+        return queryset.distinct()
+
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
     queryset = ShowSession.objects.all()
