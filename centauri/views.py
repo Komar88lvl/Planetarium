@@ -37,7 +37,7 @@ class PlanetariumDomeViewSet(viewsets.ModelViewSet):
 
 
 class AstronomyShowViewSet(viewsets.ModelViewSet):
-    queryset = AstronomyShow.objects.all()
+    queryset = AstronomyShow.objects.prefetch_related("show_themes")
 
     def get_serializer_class(self):
         if self.action == "list":
