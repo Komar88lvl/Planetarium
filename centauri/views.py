@@ -74,12 +74,16 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         show_date = self.request.query_params.get("show_date")
+        astronomy_show = self.request.query_params.get("astronomy_show")
 
         queryset = self.queryset
 
         if show_date:
             show_date = datetime.strptime(show_date, "%Y-%m-%d").date()
             queryset = queryset.filter(show_time__date=show_date)
+
+        if astronomy_show:
+            queryset = queryset.filter(astronomy_show__title__icontains=astronomy_show)
 
         if self.action == "list":
             return queryset.select_related()
