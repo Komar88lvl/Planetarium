@@ -1,5 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+
 from centauri.models import (
     ShowTheme,
     PlanetariumDome,
@@ -84,6 +86,12 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ("id", "row", "seat", "show_session")
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Ticket.objects.all(),
+                fields=["seat", "row", "show_session"]
+            )
+        ]
 
 
 class ReservationSerializer(serializers.ModelSerializer):
