@@ -59,6 +59,13 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
         return ShowSessionSerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == "list":
+            return queryset.select_related()
+
+        return queryset
+
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
