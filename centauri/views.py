@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.db.models import Count, F
 from rest_framework import viewsets
 
 from centauri.models import (
@@ -93,8 +94,20 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
                 planetarium_dome__name__icontains=planetarium_dome
             )
 
-        if self.action == "list":
+        if self.action == "retrieve":
             return queryset.select_related()
+        elif self.action == "list":
+            queryset = (
+                queryset
+                .select_related()
+                .annotate(
+                    available_places=(
+                            F("planetarium_dome__rows")
+                            * F("planetarium_dome__seats_in_row")
+                            - Count("tickets")
+                    )
+                )
+            )
 
         return queryset
 
