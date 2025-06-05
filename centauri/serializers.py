@@ -90,7 +90,11 @@ class ShowSessionRetrieveSerializer(ShowSessionSerializer):
         many=False,
         read_only=True
     )
-    taken_places = TicketSeatsSerializer(source="tickets", many=True, read_only=True)
+    taken_places = TicketSeatsSerializer(
+        source="tickets",
+        many=True,
+        read_only=True
+    )
 
     class Meta:
         model = ShowSession
