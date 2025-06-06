@@ -1,7 +1,11 @@
+import pathlib
+import uuid
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.utils.text import slugify
 
 
 class ShowTheme(models.Model):
@@ -11,6 +15,15 @@ class ShowTheme(models.Model):
         return self.name
 
 
+def astronomy_show_poster_path(
+        instance: "AstronomyShow",
+        filename: str
+) -> pathlib.Path:
+    filename = (f"{slugify(instance.title)}-{uuid.uuid4()}"
+                + pathlib.Path(filename).suffix)
+    return pathlib.Path("upload/astronomy_shows/") / pathlib.Path(filename)
+
+
 class AstronomyShow(models.Model):
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
@@ -18,6 +31,7 @@ class AstronomyShow(models.Model):
         ShowTheme,
         related_name="astronomy_shows",
     )
+    poster = models.ImageField(null=True, upload_to=astronomy_show_poster_path)
 
     def __str__(self):
         return self.title
