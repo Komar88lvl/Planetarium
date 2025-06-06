@@ -1,7 +1,10 @@
 from datetime import datetime
 
 from django.db.models import Count, F
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
 from centauri.models import (
     ShowTheme,
@@ -22,6 +25,7 @@ from centauri.serializers import (
     ShowSessionRetrieveSerializer,
     ReservationSerializer,
     ReservationListSerializer,
+    AstronomyShowPosterSerializer,
 )
 
 
@@ -48,6 +52,8 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
             return AstronomyShowListSerializer
         elif self.action == "retrieve":
             return AstronomyShowRetrieveSerializer
+        elif self.action == "upload_poster":
+            return AstronomyShowPosterSerializer
 
         return AstronomyShowSerializer
 
@@ -62,6 +68,20 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 
         return queryset.distinct()
 
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="upload-poster",
+        permission_classes=[IsAdminUser],
+    )
+    def upload_poster(self, request, pk=None):
+        astronomy_show = self.get_object()
+        serializer = self.get_serializer(astronomy_show, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
     queryset = ShowSession.objects.all()
