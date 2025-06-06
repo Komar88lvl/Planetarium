@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "centauri",
     "user",
+    "rest_framework.authtoken",
 ]
 
 AUTH_USER_MODEL = "user.User"
