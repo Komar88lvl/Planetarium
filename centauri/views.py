@@ -2,7 +2,6 @@ from datetime import datetime
 
 from django.db.models import Count, F
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
 
 from centauri.models import (
     ShowTheme,
@@ -11,7 +10,6 @@ from centauri.models import (
     ShowSession,
     Reservation,
 )
-from centauri.permissions import IsAdminOrIfAuthenticatedReadOnly
 from centauri.serializers import (
     ShowThemeSerializer,
     PlanetariumDomeSerializer,
