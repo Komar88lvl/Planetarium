@@ -152,10 +152,16 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         parameters=[
             OpenApiParameter(
                 name="show_date",
-                type=OpenApiTypes.STR,
+                type=OpenApiTypes.DATE,
                 description="Filter by show session date "
                             "(ex. ?show_date=2025-06-21)",
-            )
+            ),
+            OpenApiParameter(
+                name="astronomy_show",
+                type=OpenApiTypes.STR,
+                description="Filter by astronomy show title "
+                            "(ex. ?astronomy_show=Black hole)",
+            ),
         ]
     )
     def list(self, request, *args, **kwargs):
