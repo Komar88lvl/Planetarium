@@ -153,7 +153,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 name="show_date",
                 type=OpenApiTypes.DATE,
-                description="Filter by show session date "
+                description="Filter by show session date 'YYYY-mm-dd'"
                             "(ex. ?show_date=2025-06-21)",
             ),
             OpenApiParameter(
