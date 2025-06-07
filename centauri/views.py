@@ -162,6 +162,12 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
                 description="Filter by astronomy show title "
                             "(ex. ?astronomy_show=Black hole)",
             ),
+            OpenApiParameter(
+                name="planetarium_dome",
+                type=OpenApiTypes.STR,
+                description="Filter by planetarium_dome name "
+                            "(ex. ?planetarium_dome=Galactic Gate)",
+            ),
         ]
     )
     def list(self, request, *args, **kwargs):
