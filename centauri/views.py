@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from django.db.models import Count, F
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
@@ -82,6 +84,19 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="show_themes",
+                type=OpenApiTypes.STR,
+                description="Filter by movie show theme name "
+                            "(ex. ?show_themes=galaxies)",
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
