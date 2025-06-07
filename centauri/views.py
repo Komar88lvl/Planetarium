@@ -148,6 +148,19 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="show_date",
+                type=OpenApiTypes.STR,
+                description="Filter by show session date "
+                            "(ex. ?show_date=2025-06-21)",
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
