@@ -153,3 +153,15 @@ class AuthenticatedShowSessionTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_show_session_forbidden(self):
+        show_session = sample_show_session()
+        payload = {
+            "show_time": show_session.show_time,
+            "astronomy_show": show_session.astronomy_show,
+            "planetarium_dome": show_session.planetarium_dome
+        }
+
+        res = self.client.post(SHOW_SESSION_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
