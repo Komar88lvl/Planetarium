@@ -19,12 +19,13 @@ SHOW_SESSION_URL = reverse("centauri:showsession-list")
 
 
 def sample_astronomy_show() -> AstronomyShow:
-    show_theme = ShowTheme.objects.create(name="Test show")
+    show_theme_1 = ShowTheme.objects.create(name="Test show")
+    show_theme_2 = ShowTheme.objects.create(name="Test second show")
     astronomy_show = AstronomyShow.objects.create(
         title="Test title",
         description="Test description",
     )
-    astronomy_show.show_themes.add(show_theme)
+    astronomy_show.show_themes.add(show_theme_1, show_theme_2)
     return astronomy_show
 
 
