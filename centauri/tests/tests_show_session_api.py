@@ -13,13 +13,17 @@ from centauri.models import (
     ShowTheme,
     PlanetariumDome
 )
-from centauri.serializers import ShowSessionListSerializer, ShowSessionRetrieveSerializer
+from centauri.serializers import (
+    ShowSessionListSerializer,
+    ShowSessionRetrieveSerializer
+)
 
 SHOW_SESSION_URL = reverse("centauri:showsession-list")
 
 
 def detail_url(show_session_id):
     return reverse("centauri:showsession-detail", args=(show_session_id,))
+
 
 def sample_astronomy_show() -> AstronomyShow:
     show_theme_1 = ShowTheme.objects.create(name="Test show")
@@ -137,3 +141,15 @@ class AuthenticatedShowSessionTests(TestCase):
         serializer = ShowSessionListSerializer(show_session, many=True)
 
         self.assertIn(serializer.data[0], res.data["results"])
+
+    def test_retrieve_show_session_detail(self):
+        show_session = sample_show_session()
+
+        url = detail_url(show_session.id)
+
+        res = self.client.get(url)
+
+        serializer = ShowSessionRetrieveSerializer(show_session)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
