@@ -1,27 +1,32 @@
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
+from django.db.models import F, Count
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from centauri.models import (ShowSession,
+from centauri.models import (
+    ShowSession,
     AstronomyShow,
     ShowTheme,
     PlanetariumDome
 )
+from centauri.serializers import ShowSessionListSerializer
 
 SHOW_SESSION_URL = reverse("centauri:showsession-list")
 
+
 def sample_astronomy_show() -> AstronomyShow:
-    show_theme = ShowTheme(name="Test show")
+    show_theme = ShowTheme.objects.create(name="Test show")
     astronomy_show = AstronomyShow.objects.create(
         title="Test title",
         description="Test description",
     )
     astronomy_show.show_themes.add(show_theme)
     return astronomy_show
+
 
 def sample_show_session(**params) -> ShowSession:
     planetarium_dome = PlanetariumDome.objects.create(
