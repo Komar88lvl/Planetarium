@@ -51,3 +51,28 @@ class UnauthenticatedShowSessionTests(TestCase):
     def test_auth_required(self):
         res = self.client.get(SHOW_SESSION_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class AuthenticatedShowSessionTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            email="test@test.test",
+            password="testpassword",
+        )
+        self.client.force_authenticate(self.user)
+
+    def test_show_session_list(self):
+        sample_show_session()
+
+        res = self.client.get(SHOW_SESSION_URL)
+        show_sessions = ShowSession.objects.annotate(
+            available_places=(
+                    F("planetarium_dome__rows") *
+                    F("planetarium_dome__seats_in_row") -
+                    Count("tickets")
+            )
+        )
+        serializer = ShowSessionListSerializer(show_sessions, many=True)
+
+        self.assertEqual(res.data["results"], serializer.data)
