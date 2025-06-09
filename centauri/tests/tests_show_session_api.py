@@ -13,10 +13,13 @@ from centauri.models import (
     ShowTheme,
     PlanetariumDome
 )
-from centauri.serializers import ShowSessionListSerializer
+from centauri.serializers import ShowSessionListSerializer, ShowSessionRetrieveSerializer
 
 SHOW_SESSION_URL = reverse("centauri:showsession-list")
 
+
+def detail_url(show_session_id):
+    return reverse("centauri:showsession-detail", args=(show_session_id,))
 
 def sample_astronomy_show() -> AstronomyShow:
     show_theme_1 = ShowTheme.objects.create(name="Test show")
