@@ -115,3 +115,22 @@ class AuthenticatedShowSessionTests(TestCase):
         serializer = ShowSessionListSerializer(show_session, many=True)
 
         self.assertIn(serializer.data[0], res.data["results"])
+
+    def test_filter_show_sessions_by_astronomy_show_title(self):
+        show_session = sample_show_session()
+
+        res = self.client.get(
+            SHOW_SESSION_URL,
+            {"astronomy_show": "title"}
+        )
+        show_session = ShowSession.objects.annotate(
+            available_places=(
+                    F("planetarium_dome__rows") *
+                    F("planetarium_dome__seats_in_row") -
+                    Count("tickets")
+            )
+        )
+
+        serializer = ShowSessionListSerializer(show_session, many=True)
+
+        self.assertIn(serializer.data[0], res.data["results"])
