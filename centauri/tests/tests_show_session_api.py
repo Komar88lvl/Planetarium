@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import strptime
 
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
@@ -78,3 +79,21 @@ class AuthenticatedShowSessionTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data["results"], serializer.data)
+
+    def test_filter_show_sessions_by_show_date(self):
+        show_session = sample_show_session()
+
+        res = self.client.get(
+            SHOW_SESSION_URL,
+            {"show_date": f"{show_session.show_time.date()}"}
+        )
+        show_session = ShowSession.objects.annotate(
+            available_places=(
+                    F("planetarium_dome__rows") *
+                    F("planetarium_dome__seats_in_row") -
+                    Count("tickets")
+            )
+        )
+        serializer = ShowSessionListSerializer(show_session, many=True)
+
+        self.assertIn(serializer.data[0], res.data["results"])
