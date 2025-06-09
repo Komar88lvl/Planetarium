@@ -76,4 +76,5 @@ class AuthenticatedShowSessionTests(TestCase):
         )
         serializer = ShowSessionListSerializer(show_sessions, many=True)
 
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data["results"], serializer.data)
