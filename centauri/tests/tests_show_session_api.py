@@ -155,11 +155,15 @@ class AuthenticatedShowSessionTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_create_show_session_forbidden(self):
-        show_session = sample_show_session()
+        planetarium_dome = PlanetariumDome.objects.create(
+            name="test dom name",
+            rows=33,
+            seats_in_row = 41,
+        )
         payload = {
-            "show_time": show_session.show_time,
-            "astronomy_show": show_session.astronomy_show,
-            "planetarium_dome": show_session.planetarium_dome
+            "show_time": datetime(2024, 11, 16, 13, 30),
+            "astronomy_show": sample_astronomy_show(),
+            "planetarium_dome": planetarium_dome
         }
 
         res = self.client.post(SHOW_SESSION_URL, payload)
