@@ -158,7 +158,7 @@ class AuthenticatedShowSessionTests(TestCase):
         planetarium_dome = PlanetariumDome.objects.create(
             name="test dom name",
             rows=33,
-            seats_in_row = 41,
+            seats_in_row=41,
         )
         payload = {
             "show_time": datetime(2024, 11, 16, 13, 30),
@@ -169,3 +169,14 @@ class AuthenticatedShowSessionTests(TestCase):
         res = self.client.post(SHOW_SESSION_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class AdminShowSessionTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            email="admin@admin.test",
+            password="adminpassword",
+            is_staff=True,
+        )
+        self.client.force_authenticate(self.user)
