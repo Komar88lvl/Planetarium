@@ -183,16 +183,18 @@ class AdminShowSessionTest(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_create_show_session(self):
-        show_session = sample_show_session()
+        planetarium_dome = PlanetariumDome.objects.create(
+            name="dom name",
+            rows=33,
+            seats_in_row=22,
+        )
         payload = {
-            "show_time": timezone.make_aware(show_session.show_time),
-            "astronomy_show": show_session.astronomy_show.id,
-            "planetarium_dome": show_session.planetarium_dome.id
+            "show_time": timezone.make_aware(datetime(2024, 11, 23, 7, 15)),
+            "astronomy_show": sample_astronomy_show().id,
+            "planetarium_dome": planetarium_dome.id
         }
 
         res = self.client.post(SHOW_SESSION_URL, payload)
-        print("STATUS:", res.status_code)
-        print("RESPONSE DATA:", res.data)
 
         show_session = ShowSession.objects.get(id=res.data["id"])
 
