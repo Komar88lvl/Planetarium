@@ -63,6 +63,14 @@ class ShowSession(models.Model):
     )
     show_time = models.DateTimeField()
 
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=["planetarium_dome", "show_time"],
+                name="unique_planetarium_dome_show_time"
+            )
+        ]
+
     def __str__(self):
         return (
             f"show: {self.astronomy_show}, "

@@ -69,6 +69,12 @@ class ShowSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowSession
         fields = ("id", "astronomy_show", "planetarium_dome", "show_time")
+        validators = [
+            UniqueTogetherValidator(
+                queryset=ShowSession.objects.all(),
+                fields=["planetarium_dome", "show_time"]
+            )
+        ]
 
 
 class ShowSessionListSerializer(serializers.ModelSerializer):
