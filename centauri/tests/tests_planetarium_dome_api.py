@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from rest_framework.reverse import reverse
 
 from centauri.models import PlanetariumDome
-
+from centauri.serializers import PlanetariumDomeListSerializer
 
 PLANETARIUM_DOME_URL = reverse("centauri:planetariumdome-list")
 
@@ -18,7 +18,7 @@ def sample_planetarium_dome(**params):
     }
     defaults.update(params)
 
-    return PlanetariumDome.objects.create(**params)
+    return PlanetariumDome.objects.create(**defaults)
 
 class UnauthenticatedPlanetariumDomeTests(TestCase):
     def setUp(self):
@@ -27,3 +27,23 @@ class UnauthenticatedPlanetariumDomeTests(TestCase):
     def test_auth_required(self):
         res = self.client.get(PLANETARIUM_DOME_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class AuthenticatedPlanetariumDomeTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            email="test@test.test",
+            password="testpassword",
+        )
+        self.client.force_authenticate(self.user)
+
+    def test_planetarium_dome_list(self):
+        planetarium_dome = sample_planetarium_dome()
+
+        res = self.client.get(PLANETARIUM_DOME_URL)
+
+        serializer = PlanetariumDomeListSerializer(planetarium_dome)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data["results"][0], serializer.data)
