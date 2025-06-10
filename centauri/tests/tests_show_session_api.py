@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.test import TestCase
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
@@ -180,3 +181,25 @@ class AdminShowSessionTest(TestCase):
             is_staff=True,
         )
         self.client.force_authenticate(self.user)
+
+    def test_create_show_session(self):
+        show_session = sample_show_session()
+        payload = {
+            "show_time": timezone.make_aware(show_session.show_time),
+            "astronomy_show": show_session.astronomy_show.id,
+            "planetarium_dome": show_session.planetarium_dome.id
+        }
+
+        res = self.client.post(SHOW_SESSION_URL, payload)
+        print("STATUS:", res.status_code)
+        print("RESPONSE DATA:", res.data)
+
+        show_session = ShowSession.objects.get(id=res.data["id"])
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        for key in payload:
+            model_value = getattr(show_session, key)
+            if hasattr(model_value, "id"):
+                model_value = model_value.id
+            self.assertEqual(payload[key], model_value)
