@@ -10,6 +10,10 @@ from centauri.serializers import PlanetariumDomeListSerializer
 PLANETARIUM_DOME_URL = reverse("centauri:planetariumdome-list")
 
 
+def detail_url(planetarium_dome_id):
+    return reverse("centauri:planetariumdome-detail", args=(planetarium_dome_id,))
+
+
 def sample_planetarium_dome(**params):
     defaults = {
         "name": "test name",
