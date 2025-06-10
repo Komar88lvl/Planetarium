@@ -54,7 +54,7 @@ def sample_show_session(**params) -> ShowSession:
 
 
 class UnauthenticatedShowSessionTests(TestCase):
-    def setUP(self):
+    def setUp(self):
         self.client = APIClient()
 
     def test_auth_required(self):
