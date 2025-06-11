@@ -40,3 +40,18 @@ class AuthenticatedUserManageTests(TestCase):
         self.assertEqual(users.count(), 1)
         self.assertEqual(self.user.email, payload["email"])
         self.assertTrue(self.user.check_password(payload["password"]))
+
+    def test_authenticated_user_cannot_update_is_staff(self):
+        payload = {
+            "email": "third@email.test",
+            "password": "thirdpassword",
+            "is_staff": "True"
+        }
+
+        res = self.client.put(USER_MANAGE_URL, payload)
+        self.user.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.email, payload["email"])
+        self.assertTrue(self.user.check_password(payload["password"]))
+        self.assertFalse(self.user.is_staff)
