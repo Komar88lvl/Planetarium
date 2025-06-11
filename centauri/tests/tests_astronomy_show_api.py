@@ -1,3 +1,7 @@
+import tempfile
+import os
+
+from PIL import Image
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from rest_framework import status
@@ -8,6 +12,9 @@ from centauri.models import AstronomyShow, ShowTheme
 from centauri.serializers import AstronomyShowListSerializer
 
 ASTRONOMY_SHOW_URL = reverse("centauri:astronomyshow-list")
+
+def image_upload_url(astronomy_show_id):
+    return reverse("centauri:astronomyshow-upload-poster", args=[astronomy_show_id])
 
 
 def sample_astronomy_show() -> AstronomyShow:
@@ -86,3 +93,29 @@ class AuthenticatedAstronomyShowTests(TestCase):
         self.assertIn(serializer.data, res.data["results"])
         self.assertIn(serializer_2.data, res.data["results"])
         self.assertNotIn(serializer_3.data, res.data["results"])
+
+
+class AstronomyShowImageUploadTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_superuser(
+            "admin@test.com", "testpassword"
+        )
+        self.client.force_authenticate(self.user)
+        self.astronomy_show = sample_astronomy_show()
+
+    def tearDown(self):
+        self.astronomy_show.poster.delete()
+
+    def test_upload_poster_to_astronomy_show(self):
+        url = image_upload_url(self.astronomy_show.id)
+        with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
+            img = Image.new("RGB", (10, 10))
+            img.save(ntf, format="JPEG")
+            ntf.seek(0)
+            res = self.client.post(url, {"poster": ntf}, format="multipart")
+        self.astronomy_show.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn("poster", res.data)
+        self.assertTrue(os.path.exists(self.astronomy_show.poster.path))
