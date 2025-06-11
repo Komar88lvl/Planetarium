@@ -55,3 +55,34 @@ class AuthenticatedAstronomyShowTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data["results"], serializer.data)
+
+    def test_filter_astronomy_show_by_show_themes(self):
+        show_theme_2 = ShowTheme.objects.create(name="Test another show")
+        show_theme_3 = ShowTheme.objects.create(name="Not match")
+
+        astronomy_show = sample_astronomy_show()
+
+        astronomy_show_2 = AstronomyShow.objects.create(
+        title="Test second title",
+        description="Test second description",
+        )
+        astronomy_show_2.show_themes.set([show_theme_2])
+
+        astronomy_show_3 = AstronomyShow.objects.create(
+        title="Test third title",
+        description="Test third description",
+        )
+        astronomy_show_3.show_themes.set([show_theme_3])
+
+        res = self.client.get(
+            ASTRONOMY_SHOW_URL,
+            {"show_themes": f"show"}
+        )
+
+        serializer = AstronomyShowListSerializer(astronomy_show)
+        serializer_2 = AstronomyShowListSerializer(astronomy_show_2)
+        serializer_3 = AstronomyShowListSerializer(astronomy_show_3)
+
+        self.assertIn(serializer.data, res.data["results"])
+        self.assertIn(serializer_2.data, res.data["results"])
+        self.assertNotIn(serializer_3.data, res.data["results"])
