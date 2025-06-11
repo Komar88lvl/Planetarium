@@ -13,8 +13,12 @@ from centauri.serializers import AstronomyShowListSerializer
 
 ASTRONOMY_SHOW_URL = reverse("centauri:astronomyshow-list")
 
+
 def image_upload_url(astronomy_show_id):
-    return reverse("centauri:astronomyshow-upload-poster", args=[astronomy_show_id])
+    return reverse(
+        "centauri:astronomyshow-upload-poster",
+        args=[astronomy_show_id]
+    )
 
 
 def sample_astronomy_show() -> AstronomyShow:
@@ -51,14 +55,17 @@ class AuthenticatedAstronomyShowTests(TestCase):
         show_theme_2 = ShowTheme.objects.create(name="Test third show")
         astronomy_show = sample_astronomy_show()
         astronomy_show_2 = AstronomyShow.objects.create(
-        title="second title",
-        description="second description",
+            title="second title",
+            description="second description",
         )
         astronomy_show.show_themes.add(show_theme_1, show_theme_2)
 
         res = self.client.get(ASTRONOMY_SHOW_URL)
 
-        serializer = AstronomyShowListSerializer([astronomy_show, astronomy_show_2], many=True)
+        serializer = AstronomyShowListSerializer(
+            [astronomy_show, astronomy_show_2],
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data["results"], serializer.data)
@@ -70,20 +77,20 @@ class AuthenticatedAstronomyShowTests(TestCase):
         astronomy_show = sample_astronomy_show()
 
         astronomy_show_2 = AstronomyShow.objects.create(
-        title="Test second title",
-        description="Test second description",
+            title="Test second title",
+            description="Test second description",
         )
         astronomy_show_2.show_themes.set([show_theme_2])
 
         astronomy_show_3 = AstronomyShow.objects.create(
-        title="Test third title",
-        description="Test third description",
+            title="Test third title",
+            description="Test third description",
         )
         astronomy_show_3.show_themes.set([show_theme_3])
 
         res = self.client.get(
             ASTRONOMY_SHOW_URL,
-            {"show_themes": f"show"}
+            {"show_themes": "show"}
         )
 
         serializer = AstronomyShowListSerializer(astronomy_show)
