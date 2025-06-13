@@ -14,6 +14,7 @@ jsonschema==4.24.0
 jsonschema-specifications==2025.4.1
 mccabe==0.7.0
 pillow==11.2.1
+psycopg-binary==3.2.9
 pycodestyle==2.13.0
 pyflakes==3.3.2
 PyJWT==2.9.0
